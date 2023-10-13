@@ -1,4 +1,6 @@
-﻿using StudentDiaryWPF.Commands;
+﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using StudentDiaryWPF.Commands;
 using StudentDiaryWPF.Models;
 using StudentDiaryWPF.Models.Domains;
 using StudentDiaryWPF.Models.Wrappers;
@@ -20,7 +22,7 @@ namespace StudentDiaryWPF.ViewModels
         {
             CloseCommand = new RelayCommand(Close);
             ConfirmCommand = new RelayCommand(Confirm);
-
+            
             if (student == null)
             {
                 Student = new StudentWrapper();
@@ -33,6 +35,7 @@ namespace StudentDiaryWPF.ViewModels
             InitGroups();
         }
         private bool _isUpdate;
+        //private bool _isBtnConfirmEnabled;
         private StudentWrapper _student;
 
         public StudentWrapper Student
@@ -53,6 +56,16 @@ namespace StudentDiaryWPF.ViewModels
                 OnPropertyChanged();
             }
         }
+        /*public bool IsBtnConfirmEnabled
+        {
+            get { return _isBtnConfirmEnabled; }
+            set
+            {
+                _isBtnConfirmEnabled = value;
+                OnPropertyChanged();
+            }
+        }*/
+
         private ObservableCollection<Group> _groups;
         public ObservableCollection<Group> Groups
         {
@@ -75,9 +88,15 @@ namespace StudentDiaryWPF.ViewModels
         }
         public ICommand CloseCommand { get; set; }
         public ICommand ConfirmCommand { get; set; }
-
         private void Confirm(object obj)
         {
+
+            if (!Student.IsValid)
+            {
+                return;
+            }
+            
+            
             if (!IsUpdate)
             {
                 _repository.AddStudent(Student);
@@ -89,9 +108,6 @@ namespace StudentDiaryWPF.ViewModels
 
             CloseWindow(obj as Window);
         }
-
-        
-
         private void Close(object obj)
         {
             CloseWindow(obj as Window);
